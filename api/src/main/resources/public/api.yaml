@@ -1,0 +1,85 @@
+openapi: 3.0.1
+info:
+  title: Car Hire API
+  version: 0.1.0
+  contact:
+    name: Your name here
+  description: Car Hire API
+servers:
+  - url: http://localhost:{port}
+    description: local environment
+    variables:
+      port:
+        default: '8080'
+tags:
+  - name: sample
+    description: Sample resource endpoint
+paths:
+  /sample:
+    get:
+      tags:
+        - sample
+      summary: get sample
+      description: returns a list of all the sample objects, without any filtering
+      operationId: getSamples
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SampleDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  responses:
+    Unauthorized:
+      description: unauthorized
+    BadRequest:
+      description: bad request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ValidationDTO'
+    ServerError:
+      description: internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+  schemas:
+    ValidationDTO:
+      type: object
+      properties:
+        code:
+          type: string
+        field:
+          type: string
+        description:
+          type: string
+    ErrorDTO:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    SampleDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: id of the sample
+        name:
+          type: string
+          example: Sample name
+          description: full name of the sample
