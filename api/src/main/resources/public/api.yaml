@@ -76,8 +76,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int32
+          type: string
           description: id of the sample
         name:
           type: string

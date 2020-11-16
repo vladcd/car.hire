@@ -2,27 +2,26 @@ package ro.agilehub.javacourse.car.hire.fleet.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "country")
+@Document(collection = "country")
 public class SampleCountry {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private ObjectId _id;
 
     private String name;
 
     private String isoCode;
 
-    public Integer getId() {
-        return id;
+    public ObjectId getId() {
+        return _id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(ObjectId _id) {
+        this._id = _id;
     }
 
     public String getName() {
@@ -50,14 +49,14 @@ public class SampleCountry {
         SampleCountry that = (SampleCountry) o;
 
         return new EqualsBuilder()
-                .append(id, that.id)
+                .append(_id, that._id)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
+                .append(_id)
                 .toHashCode();
     }
 }

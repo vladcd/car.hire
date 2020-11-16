@@ -1,9 +1,10 @@
 package ro.agilehub.javacourse.car.hire.fleet.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import ro.agilehub.javacourse.car.hire.fleet.entity.SampleEntity;
 
 @Repository
-public interface SampleEntityRepository extends JpaRepository<SampleEntity, Integer> {
+public interface SampleEntityRepository extends MongoRepository<SampleEntity, ObjectId> {
 }

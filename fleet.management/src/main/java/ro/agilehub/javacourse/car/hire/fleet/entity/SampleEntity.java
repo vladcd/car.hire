@@ -2,29 +2,26 @@ package ro.agilehub.javacourse.car.hire.fleet.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "sample_entity")
+@Document(collection = "entity")
 public class SampleEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private ObjectId _id;
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private SampleCountry country;
+    private String country;
 
-    public Integer getId() {
-        return id;
+    public ObjectId getId() {
+        return _id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(ObjectId _id) {
+        this._id = _id;
     }
 
     public String getName() {
@@ -35,11 +32,11 @@ public class SampleEntity {
         this.name = name;
     }
 
-    public SampleCountry getCountry() {
+    public String getCountry() {
         return country;
     }
 
-    public void setCountry(SampleCountry country) {
+    public void setCountry(String country) {
         this.country = country;
     }
 
@@ -52,14 +49,15 @@ public class SampleEntity {
         SampleEntity that = (SampleEntity) o;
 
         return new EqualsBuilder()
-                .append(id, that.id)
+                .append(_id, that._id)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
+                .append(_id)
                 .toHashCode();
     }
+
 }
