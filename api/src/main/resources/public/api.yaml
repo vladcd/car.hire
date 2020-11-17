@@ -3,7 +3,7 @@ info:
   title: Car Hire API
   version: 0.1.0
   contact:
-    name: Your name here
+    name: Adam Alexandru
   description: Car Hire API
 servers:
   - url: http://localhost:{port}
@@ -12,42 +12,443 @@ servers:
       port:
         default: '8080'
 tags:
-  - name: sample
-    description: Sample resource endpoint
+  - name: user
+    description: User management
+  - name: fleet
+    description: Fleet management
+  - name: rental
+    description: Rental service
 paths:
-  /sample:
-    get:
+  /user:
+    post:
       tags:
-        - sample
-      summary: get sample
-      description: returns a list of all the sample objects, without any filtering
-      operationId: getSamples
+        - user
+      summary: Create user
+      description: This operation can be done by the logged user.
+      operationId: createUser
+      requestBody:
+        description: "Create user body"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
       responses:
-        '200':
-          description: success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SampleDTO'
+        '201':
+          $ref: '#/components/responses/ResourceCreated'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/ServerError'
+    get:
+      tags:
+        - user
+      summary: Get all users
+      description: Return a list with all the users
+      operationId: getAllUsers
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+            enum: ["ACTIVE", "DELETED"]
+          description: status of the user account
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /user/{id}:
+    get:
+      tags:
+        - user
+      summary: Get user by ID
+      description: Return the user found by ID
+      operationId: getUserByID
+      parameters:
+        - in: "path"
+          name: "id"
+          description: User ID
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: Return user details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      tags:
+        - user
+      summary: Update user details
+      description: Update user details with new information
+      operationId: updateUserDetails
+      parameters:
+        - in: "path"
+          name: "id"
+          description: User ID
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        description: "Update user body"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: Delete user account
+      operationId: deleteUser
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "integer"
+          description: User ID
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /fleet:
+    post:
+      tags:
+        - fleet
+      summary: Add new car to the fleet
+      operationId: addCarToFleet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Car"
+      responses:
+        '201':
+          $ref: '#/components/responses/ResourceCreated'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    get:
+      tags:
+        - fleet
+      summary: Get list with all cars in the fleet
+      operationId: getAllCarsFromFleet
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+            enum: ["ACTIVE", "DELETED"]
+          description: status of the car
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Car"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /fleet/{id}:
+    get:
+      tags:
+        - fleet
+      summary: Get car details by ID
+      operationId: getCarByID
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "integer"
+          description: Car ID
+      responses:
+        '200':
+          description: Return car's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      tags:
+        - fleet
+      summary: Update car details
+      description: Update car with new information
+      operationId: updateCarDetails
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "integer"
+          description: Car ID
+      requestBody:
+        description: "Update car body"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Car"
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      tags:
+        - fleet
+      summary: Delete car
+      description: Delete car fromthe fleet
+      operationId: deleteCar
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "integer"
+          description: Car ID
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'   
+  /rent:
+    post:
+      tags:
+        - rental
+      summary: Create new reservation
+      operationId: createReservation
+      requestBody:
+        description: "Create reservation body"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reservation"
+      responses:
+        '201':
+          $ref: '#/components/responses/ResourceCreated'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    get:
+      tags:
+        - rental
+      summary: Get all reservations
+      description: Return a list with all the reservations
+      operationId: getAllReservations
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+            enum: ["ACTIVE", "CANCELLED"]
+          description: status of the reservation
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Reservation"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /rent/{id}:
+    get:
+      tags:
+        - rental
+      summary: Get reservation by ID
+      description: Return the reservation found by ID
+      operationId: getReservationByID
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "integer"
+          description: Reservation ID
+      responses:
+        '200':
+          description: Return user's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      tags:
+        - rental
+      summary: Update reservation details
+      description: Update reservation details with new information
+      operationId: updateReservationDetails
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "integer"
+          description: Reservation ID
+      requestBody:
+        description: "Update reservation body"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reservation" #### this should have another DTO with required fields?
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      tags:
+        - rental
+      summary: Delete reservation
+      description: Delete reservation from database
+      operationId: deleteReservation
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "integer"
+          description: Reservation ID
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    
+          
 components:
   responses:
+    ResourceCreated:
+      description: success
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResourceCreatedDTO'
+    Success:
+      description: success
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseDTO'
     Unauthorized:
       description: unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    NotFound:
+      description: not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
     BadRequest:
       description: bad request
       content:
         application/json:
           schema:
-            type: array
-            items:
               $ref: '#/components/schemas/ValidationDTO'
     ServerError:
       description: internal server error
@@ -56,30 +457,107 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorDTO'
   schemas:
-    ValidationDTO:
+    User:
       type: object
       properties:
-        code:
+        id:
+          type: integer
+          format: "int64"
+        username: 
           type: string
-        field:
+        password:
           type: string
-        description:
+          format: "password"
+        firstname:
           type: string
+        lastname:
+          type: string
+        countryOfResidence:
+          type: string
+        driverLicenseNo:
+          type: string
+        status:
+          type: string
+    Car:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        make:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+        mileage:
+          type: integer
+          format: int64
+        fuel:
+          type: number
+          format: float
+        carClass:
+          type: string
+        status:
+          type: string
+    Reservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: "int64"
+        userID: 
+          type: integer
+          format: "int64"
+        carID:
+          type: integer
+          format: "int64"
+        startDateTime:
+          type: string
+          format: "date-time"
+        endDateTime:
+          type: string
+          format: "date-time"
+        status:
+          type: string
+    ResourceCreatedDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: "int64"
+          example: 12
+          description: ID of the created resource
     ErrorDTO:
       type: object
       properties:
         code:
           type: string
+          example: error code
         message:
           type: string
-    SampleDTO:
+          example: error message
+    ResponseDTO:
       type: object
       properties:
-        id:
-          type: integer
-          format: int32
-          description: id of the sample
-        name:
+        message:
           type: string
-          example: Sample name
-          description: full name of the sample
+          example: Sample message
+          description: Custom message
+    ValidationDTO:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Sample message
+          description: Custom message
+      # type: array
+      # items:
+      #   type: object
+      #   properties:
+      #     code:
+      #       type: string
+      #       example: error code
+      #     message:
+      #       type: string 
+      #       example: validation message
