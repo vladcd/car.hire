@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: '0001-add-join-date'
+      author: vladcarcu
+      comments: 'Adding a join date to a sample entity, so that they can be evaluated based on age'
+      changes:
+        - addColumn:
+            tableName: sample_entity
+            columns:
+              - column:
+                  name: join_date
+                  type: date

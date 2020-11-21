@@ -34,6 +34,8 @@
         <spring-openapi.version>1.4.8</spring-openapi.version>
 
         <postgresql.version>42.2.18</postgresql.version>
+        
+        <liquibase-core.version>4.2.0</liquibase-core.version>
     </properties>
 
     <packaging>pom</packaging>

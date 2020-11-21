@@ -42,6 +42,12 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>${spring-openapi.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase-core.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

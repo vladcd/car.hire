@@ -2,8 +2,10 @@ package ro.agilehub.javacourse.car.hire.fleet.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "sample_entity")
@@ -18,6 +20,9 @@ public class SampleEntity {
     @ManyToOne
     @JoinColumn(name = "country_id")
     private SampleCountry country;
+
+    @LastModifiedDate
+    private LocalDate joinDate;
 
     public Integer getId() {
         return id;
