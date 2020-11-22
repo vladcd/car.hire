@@ -1,26 +1,17 @@
 package ro.agilehub.javacourse.car.hire.fleet.service.mapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ro.agilehub.javacourse.car.hire.fleet.domain.SampleEntityDO;
 import ro.agilehub.javacourse.car.hire.fleet.entity.SampleCountry;
 import ro.agilehub.javacourse.car.hire.fleet.entity.SampleEntity;
 
-@Component
-public class SampleEntityDOMapper {
+@Mapper(componentModel = "spring", uses = {SampleCountryDOMapper.class, ObjectIdMapper.class})
+public interface SampleEntityDOMapper {
 
-    @Autowired
-    private SampleCountryDOMapper countryDOMapper;
-
-    public SampleEntityDO toDomainObject(SampleEntity sampleEntity, SampleCountry sampleCountry) {
-        if (sampleEntity == null) {
-            return null;
-        }
-        return new SampleEntityDO.SampleEntityDOBuilder()
-                .id(sampleEntity.getId().toHexString())
-                .name(sampleEntity.getName())
-                .country(countryDOMapper.toDomainObject(sampleCountry))
-                .build();
-    }
+    @Mapping(target = "country", source = "sampleCountry")
+    @Mapping(target = "id", source = "sampleEntity.id")
+    @Mapping(target = "name", source = "sampleEntity.name")
+    SampleEntityDO toDomainObject(SampleEntity sampleEntity, SampleCountry sampleCountry);
 
 }

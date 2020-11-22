@@ -42,7 +42,7 @@ public class DefaultSampleService implements SampleService {
     }
 
     private SampleEntityDO map(SampleEntity sampleEntity) {
-        SampleCountry sampleCountry = sampleCountryRepository
+        var sampleCountry = sampleCountryRepository
                 .findById(new ObjectId(sampleEntity.getCountry()))
                 .orElse(null);
         return mapper.toDomainObject(sampleEntity, sampleCountry);
