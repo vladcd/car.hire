@@ -34,7 +34,7 @@
         <spring-openapi.version>1.4.8</spring-openapi.version>
 
         <postgresql.version>42.2.18</postgresql.version>
-        
+
         <liquibase-core.version>4.2.0</liquibase-core.version>
     </properties>
 
@@ -52,6 +52,13 @@
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -62,6 +69,13 @@
                     <source>15</source>
                     <target>15</target>
                     <compilerArgs>--enable-preview</compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>
