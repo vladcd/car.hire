@@ -282,7 +282,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
-          $ref: '#/components/responses/ServerError'   
+          $ref: '#/components/responses/ServerError'
   /rent:
     post:
       tags:
@@ -416,8 +416,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/ServerError'
-    
-          
+
+
 components:
   responses:
     ResourceCreated:
@@ -449,7 +449,7 @@ components:
       content:
         application/json:
           schema:
-              $ref: '#/components/schemas/ValidationDTO'
+            $ref: '#/components/schemas/ErrorDTO'
     ServerError:
       description: internal server error
       content:
@@ -463,7 +463,7 @@ components:
         id:
           type: integer
           format: "int64"
-        username: 
+        username:
           type: string
         password:
           type: string
@@ -506,7 +506,7 @@ components:
         id:
           type: integer
           format: "int64"
-        userID: 
+        userID:
           type: integer
           format: "int64"
         carID:
@@ -532,8 +532,8 @@ components:
       type: object
       properties:
         code:
-          type: string
-          example: error code
+          type: integer
+          example: 400
         message:
           type: string
           example: error message
@@ -544,20 +544,3 @@ components:
           type: string
           example: Sample message
           description: Custom message
-    ValidationDTO:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Sample message
-          description: Custom message
-      # type: array
-      # items:
-      #   type: object
-      #   properties:
-      #     code:
-      #       type: string
-      #       example: error code
-      #     message:
-      #       type: string 
-      #       example: validation message
