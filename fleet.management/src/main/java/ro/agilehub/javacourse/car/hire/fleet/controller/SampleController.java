@@ -6,12 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ro.agilehub.javacourse.car.hire.api.model.SampleDTO;
 import ro.agilehub.javacourse.car.hire.api.specification.SampleApi;
-import ro.agilehub.javacourse.car.hire.fleet.entity.SampleEntity;
 import ro.agilehub.javacourse.car.hire.fleet.service.SampleService;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 

@@ -6,3 +6,5 @@
 /user.management/target/
 /.idea/
 /**/*.iml
+/target/sonar/.sonar_lock
+/target/sonar/report-task.txt
