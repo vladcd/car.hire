@@ -37,6 +37,100 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/ServerError'
+  /users:
+    get:
+      tags:
+        - user
+      summary: get all users
+      description: returns a list Return a list with all the users without any filtering
+      operationId: getUsers
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags:
+        - user
+      summary: create a new user
+      description: add a new user and returns it
+      operationId: addUser
+      requestBody:
+        description: The user data to insert
+        required: true
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/UserDTO'
+      responses:
+        '200':
+          description: Created user
+          content:
+            application/json:
+              schema: 
+                 $ref: '#/components/schemas/UserDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /users/{userId}:
+   parameters:
+        - name: userId
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+   get:
+     summary: Returns a user by ID.
+     operationId: getUserById
+     responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: Invalid user id
+        '404':
+          description: User with the specified ID was not found
+        '401':
+          description: Unauthorized
+   patch:
+     summary: user update
+     operationId: updateUser
+     requestBody:
+         content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/UserDTO'
+     responses:
+        '204':
+          description: Updated the user partially
+   delete:
+    summary: Delete user by id
+    operationId: deleteUserById
+    responses:
+       '204':
+          description: The user was  deleted
+       '404':
+          description: User with the specified ID was not found
+       '401':
+          description: Unauthorized
 components:
   responses:
     Unauthorized:
@@ -83,3 +177,41 @@ components:
           type: string
           example: Sample name
           description: full name of the sample
+    UserDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: id of the sample
+        firstName:
+          type: string
+          example: User first name
+          description: first name of the user
+        lastName:
+          type: string
+          example: User last name
+          description: last name of the user
+        email:
+          type: string
+          example: User email
+          description: email of the user
+        password:
+          type: string
+          example: User password
+          description: password of the user
+        username:
+          type: string
+          example: User username
+          description: username of the user
+        countryOfResidence:
+          type: string
+          example: User country
+          description: country of the user
+        status:
+          type: string
+          example: User status
+          description: status of the user
+          enum:
+           - ACTIVE
+           - DELETED
