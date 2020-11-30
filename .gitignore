@@ -6,3 +6,6 @@
 /user.management/target/
 /.idea/
 /**/*.iml
+.classpath
+.project
+.settings/
