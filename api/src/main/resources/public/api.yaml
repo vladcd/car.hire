@@ -131,6 +131,172 @@ paths:
           description: User with the specified ID was not found
        '401':
           description: Unauthorized
+  /cars:
+    post:
+      tags:
+        - car
+      summary: create a new car
+      description: add a new car and returns it
+      operationId: addCar
+      requestBody:
+        description: The car data to insert
+        required: true
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/CarDTO'
+      responses:
+        '200':
+          description: Created car
+          content:
+            application/json:
+              schema: 
+                 $ref: '#/components/schemas/CarDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /cars/findByStatus:
+    parameters:
+        - name: status
+          in: query
+          required: true
+          schema:
+            type: string
+    get:
+      tags:
+        - car
+      summary: get cars filtered by status
+      description: returns a list Return a list with  cars filtered by status
+      operationId: getCarsByStatus
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CarDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /cars/{carId}:
+   parameters:
+        - name: carId
+          in: path
+          description: Car ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+   get:
+     summary: Returns a car by ID.
+     operationId: getCarById
+     responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarDTO'
+        '400':
+          description: Invalid car id
+        '404':
+          description: Car with the specified ID was not found
+        '401':
+          description: Unauthorized
+   patch:
+     summary: car update
+     operationId: updateCar
+     requestBody:
+         content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/CarDTO'
+     responses:
+        '204':
+          description: Updated the car partially
+   delete:
+    summary: Delete car by id
+    operationId: deleteCarById
+    responses:
+       '204':
+          description: The car was  deleted
+       '404':
+          description: Car with the specified ID was not found
+       '401':
+          description: Unauthorized
+  /rental:
+    post:
+      tags:
+        - rental
+      summary: create a new rental
+      description: add a new rental and returns it
+      operationId: addRental
+      requestBody:
+        description: The rental data to insert
+        required: true
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/RentalDTO'
+      responses:
+        '200':
+          description: Created rental
+          content:
+            application/json:
+              schema: 
+                 $ref: '#/components/schemas/RentalDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /rental{userId}/{carId}:
+    parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: userId  
+          required: true
+          schema:
+           type: integer
+        - in: path
+          name: carId  
+          required: true
+          schema:
+           type: integer
+    get:
+      tags:
+        - rental
+      summary: get renatal filtered by user id, car id and status
+      description: returns a list Return a list with  cars filtered by status
+      operationId: getRentals
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CarDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
 components:
   responses:
     Unauthorized:
@@ -183,7 +349,7 @@ components:
         id:
           type: integer
           format: int32
-          description: id of the sample
+          description: id of the user
         firstName:
           type: string
           example: User first name
@@ -215,3 +381,66 @@ components:
           enum:
            - ACTIVE
            - DELETED
+    CarDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: id of the car
+        make:
+          type: string
+          example: car maker
+          description: car maker
+        model:
+          type: string
+          example: car model
+          description: the car model
+        year:
+          type: string
+          example: car year
+          description: car year
+        mileage:
+          type: string
+          example: car mileage
+          description: car mileage
+        fuel:
+          type: string
+          example: car fuel type
+          description: car fuel type
+        classType:
+          type: string
+          example: car class tyype
+          description: class type
+        status:
+          type: string
+          example: User status
+          description: status of the user
+          enum:
+           - ACTIVE
+           - DELETED
+    RentalDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: renatal id
+        rentalStartDate:
+          type: string
+          format: date-time
+          description: rental start date
+        rentalEndDate:
+          type: string
+          format: date-time
+          description: rental end date
+        user:
+          $ref: '#/components/schemas/UserDTO'
+        car:
+          $ref: '#/components/schemas/CarDTO'
+        status:
+          type: string
+          example: Rental status
+          description: Rental status
+          enum:
+           - ACTIVE
+           - CANCELLED

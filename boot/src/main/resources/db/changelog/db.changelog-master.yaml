@@ -5,8 +5,8 @@ databaseChangeLog:
       comments: 'Adding a join date to a sample entity, so that they can be evaluated based on age'
       changes:
         - addColumn:
-            tableName: sample_entity
+            tableName: user_entity
             columns:
               - column:
-                  name: join_date
-                  type: date
+                  name: title
+                  type: varchar(10)
