@@ -39,16 +39,18 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserDTO> getUser(Integer id) {
-        return null;
+        return ResponseEntity.ok(userDTOMapper.toUserDTO(userService.getById(id)));
     }
 
     @Override
     public ResponseEntity<Void> patchUser(Integer id, @Valid UserDTO userDTO) {
-        return null;
+        userService.patchUser(id, userDTOMapper.toUserDO(userDTO));
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
     public ResponseEntity<Void> deleteUser(Integer id) {
-        return null;
+        userService.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

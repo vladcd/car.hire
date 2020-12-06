@@ -1,8 +1,4 @@
 # Project exclude paths
-/api/target/
-/boot/target/
-/fleet.management/target/
-/rental/target/
-/user.management/target/
+/**/target/
 /.idea/
 /**/*.iml

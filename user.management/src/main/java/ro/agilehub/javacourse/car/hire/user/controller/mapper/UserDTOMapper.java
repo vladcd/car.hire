@@ -16,4 +16,9 @@ public interface UserDTOMapper {
 
     @Mapping(target = "id", ignore = true)
     UserDO toNewUserDO(UserDTO userDTO);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "username", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    UserDO toUserDO(UserDTO userDTO);
 }

@@ -6,6 +6,7 @@ import ro.agilehub.javacourse.car.hire.user.repository.definition.UserRepository
 import ro.agilehub.javacourse.car.hire.user.repository.entity.User;
 import ro.agilehub.javacourse.car.hire.user.service.definition.UserService;
 import ro.agilehub.javacourse.car.hire.user.service.domain.UserDO;
+import ro.agilehub.javacourse.car.hire.user.service.domain.UserStatusDO;
 import ro.agilehub.javacourse.car.hire.user.service.mapper.UserDOMapper;
 
 import java.util.List;
@@ -32,5 +33,29 @@ public class DefaultUserService implements UserService {
         User newUser = userDOMapper.toUser(example);
         newUser = userRepository.save(newUser);
         return newUser.getId();
+    }
+
+    @Override
+    public UserDO getById(Integer id) {
+        return userDOMapper.toUserDO(getUserById(id));
+    }
+
+    @Override
+    public void patchUser(Integer id, UserDO updateExample) {
+        User user = getUserById(id);
+        userDOMapper.patchUser(updateExample, user);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(Integer id) {
+        User user = getUserById(id);
+        user.setStatus(UserStatusDO.DELETED.name());
+        userRepository.save(user);
+    }
+
+    private User getUserById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow();
     }
 }

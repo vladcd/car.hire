@@ -9,4 +9,10 @@ public interface UserService {
     List<UserDO> findAllUsers();
 
     Integer createNewUser(UserDO example);
+
+    UserDO getById(Integer id);
+
+    void patchUser(Integer id, UserDO updateExample);
+
+    void deleteUser(Integer id);
 }
