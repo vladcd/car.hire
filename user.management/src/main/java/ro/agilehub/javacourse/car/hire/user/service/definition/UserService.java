@@ -15,4 +15,6 @@ public interface UserService {
     void patchUser(Integer id, UserDO updateExample);
 
     void deleteUser(Integer id);
+
+    UserDO getByUsername(String username);
 }

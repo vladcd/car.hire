@@ -54,6 +54,11 @@ public class DefaultUserService implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public UserDO getByUsername(String username) {
+        return userDOMapper.toUserDO(userRepository.findByUsernameIgnoreCase(username).orElseThrow());
+    }
+
     private User getUserById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow();

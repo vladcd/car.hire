@@ -1,16 +1,14 @@
-package ro.agilehub.javacourse.car.hire;
+package ro.agilehub.javacourse.car.hire.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @ComponentScan(basePackages = "ro.agilehub.javacourse.car.hire")
-@EnableTransactionManagement
 @SpringBootApplication
-public class CarHireApplication {
+public class TestConfiguration {
 
     public static void main(final String[] args) {
-        SpringApplication.run(CarHireApplication.class, args);
+        SpringApplication.run(TestConfiguration.class, args);
     }
 }
