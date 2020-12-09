@@ -127,6 +127,11 @@
                         <version>8.0.1</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*MapperImpl.*</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
