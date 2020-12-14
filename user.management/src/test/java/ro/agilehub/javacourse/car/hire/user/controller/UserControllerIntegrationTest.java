@@ -13,8 +13,7 @@ import ro.agilehub.javacourse.car.hire.api.model.CreatedDTO;
 import ro.agilehub.javacourse.car.hire.api.model.UserDTO;
 
 import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -49,6 +48,28 @@ public class UserControllerIntegrationTest {
         var userDTO = objectMapper.readValue(getResult.getResponse().getContentAsString(), UserDTO.class);
 
         assertEquals(email, userDTO.getEmail());
+    }
+
+    @Test
+    public void whenPatchUserOk_thenFindById() throws Exception {
+        final String email = "vladcarcu+post@email.com";
+        final String username = "vladcarcu+post";
+        var input = new UserDTO()
+                .email(email)
+                .username(username);
+
+        var postResult = mvc.perform(post("/user")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        var createdDTO = objectMapper.readValue(postResult.getResponse().getContentAsString(), CreatedDTO.class);
+
+        mvc.perform(patch("/user/" + createdDTO.getId())
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isOk());
     }
 
 }

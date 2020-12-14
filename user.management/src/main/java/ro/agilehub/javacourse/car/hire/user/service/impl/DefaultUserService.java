@@ -7,7 +7,9 @@ import ro.agilehub.javacourse.car.hire.user.repository.entity.User;
 import ro.agilehub.javacourse.car.hire.user.service.definition.UserService;
 import ro.agilehub.javacourse.car.hire.user.service.domain.UserDO;
 import ro.agilehub.javacourse.car.hire.user.service.domain.UserStatusDO;
+import ro.agilehub.javacourse.car.hire.user.service.exception.UserManagementValidationException;
 import ro.agilehub.javacourse.car.hire.user.service.mapper.UserDOMapper;
+import ro.agilehub.javacourse.car.hire.user.service.validator.UserServiceValidator;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,6 +20,7 @@ public class DefaultUserService implements UserService {
 
     private final UserDOMapper userDOMapper;
     private final UserRepository userRepository;
+    private final UserServiceValidator userServiceValidator;
 
     @Override
     public List<UserDO> findAllUsers() {
@@ -30,6 +33,17 @@ public class DefaultUserService implements UserService {
 
     @Override
     public Integer createNewUser(UserDO example) {
+        UserServiceValidator.Input.InputBuilder validationBuilder = UserServiceValidator.Input.builder();
+        userRepository.findByEmailIgnoreCase(example.getEmail())
+                .ifPresent(user -> validationBuilder.userWithSameEmail(userDOMapper.toUserDO(user)));
+        userRepository.findByUsernameIgnoreCase(example.getUsername())
+                .ifPresent(user -> validationBuilder.userWithSameUsername(userDOMapper.toUserDO(user)));
+
+        var errors = userServiceValidator.validateChangeUser(example, validationBuilder.build());
+        if (!errors.isEmpty()) {
+            throw new UserManagementValidationException(errors);
+        }
+
         User newUser = userDOMapper.toUser(example);
         newUser = userRepository.save(newUser);
         return newUser.getId();
@@ -42,6 +56,18 @@ public class DefaultUserService implements UserService {
 
     @Override
     public void patchUser(Integer id, UserDO updateExample) {
+        UserServiceValidator.Input.InputBuilder validationBuilder = UserServiceValidator.Input.builder();
+        if (updateExample.getEmail() != null) {
+            userRepository.findByEmailIgnoreCase(updateExample.getEmail())
+                    .ifPresent(user -> validationBuilder.userWithSameEmail(userDOMapper.toUserDO(user)));
+        }
+        updateExample.setId(id);
+
+        var errors = userServiceValidator.validateChangeUser(updateExample, validationBuilder.build());
+        if (!errors.isEmpty()) {
+            throw new UserManagementValidationException(errors);
+        }
+
         User user = getUserById(id);
         userDOMapper.patchUser(updateExample, user);
         userRepository.save(user);
