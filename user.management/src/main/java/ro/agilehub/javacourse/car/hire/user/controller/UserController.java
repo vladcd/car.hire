@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('MANAGER')")
+@PreAuthorize("hasAuthority('MANAGER')")
 @RequiredArgsConstructor
 public class UserController implements UserApi {
 
