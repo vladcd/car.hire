@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+/**
+ * This controller uses a framework called nimbus to automatically expose a JWKSet URI
+ * The bean is configured in the AuthServerOAuth2Config
+ */
 @RestController
 public class JwkSetController {
 

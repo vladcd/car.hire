@@ -45,6 +45,13 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
                 .checkTokenAccess("isAuthenticated()");
     }
 
+    /**
+     * Configure the accepted cients and where they are stored.
+     * We've used inMemory storage, but a database could be used as well for adding clients dynamically
+     *
+     * @param clients
+     * @throws Exception
+     */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients)
             throws Exception {
@@ -52,9 +59,18 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
                 .withClient("carhire.client.id")
                 .secret(passwordEncoder.encode("secret"))
                 .authorizedGrantTypes("password", "authorization_code", "refresh_token")
-                .scopes("read");
+                .scopes("read", "write");
     }
 
+    /**
+     * This puts everything together:
+     * where the tokens are stored
+     * how they are converted (encrypted)
+     * and also the underlying authentication manager
+     *
+     * @param endpoints
+     * @throws Exception
+     */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
@@ -63,11 +79,22 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
                 .authenticationManager(authenticationManager);
     }
 
+    /**
+     * This configures the use of JWT tokens (the tokens aren't stored anywhere)
+     * Other options are in memory and in a database
+     *
+     * @return
+     */
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
 
+    /**
+     * The access token converter encrypts the token using the specified prive-public key pair
+     *
+     * @return
+     */
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -75,6 +102,12 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
         return converter;
     }
 
+    /**
+     * This configures the available token services
+     * Here we configure again the tokenStore and mention that we support the refresh_token flow
+     *
+     * @return
+     */
     @Bean
     @Primary
     public DefaultTokenServices tokenServices() {
@@ -84,12 +117,22 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
         return defaultTokenServices;
     }
 
+    /**
+     * This builds a key pair  based on the carhire.jks file in the classpath
+     *
+     * @return
+     */
     @Bean
     public KeyPair keyPair() {
         KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("carhire.jks"), "mycarhirepass".toCharArray());
         return keyStoreKeyFactory.getKeyPair("carhire");
     }
 
+    /**
+     * This builds a JWKSet bean (from nimbus), based on the public key from the key pair
+     *
+     * @return
+     */
     @Bean
     public JWKSet jwkSet() {
         RSAKey.Builder builder = new RSAKey.Builder((RSAPublicKey) keyPair().getPublic())
@@ -99,6 +142,11 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
         return new JWKSet(builder.build());
     }
 
+    /**
+     * This is a helper main method to encrypt passwords
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         System.out.println(new BCryptPasswordEncoder().encode("123"));
     }
