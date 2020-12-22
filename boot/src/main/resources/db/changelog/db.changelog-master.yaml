@@ -10,3 +10,23 @@ databaseChangeLog:
               - column:
                   name: join_date
                   type: date
+  - changeSet:
+      id: '0002-add-user-auditing'
+      author: vladcarcu
+      comments: 'Adding creation and last modified auditing fields to the user entity'
+      changes:
+        - addColumn:
+            tableName: carhire_user
+            columns:
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: created_by
+                  type: varchar
+              - column:
+                  name: last_modified_date
+                  type: timestamp
+              - column:
+                  name: last_modified_by
+                  type: varchar
