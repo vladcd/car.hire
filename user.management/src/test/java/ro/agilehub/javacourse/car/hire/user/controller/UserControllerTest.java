@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.agilehub.javacourse.car.hire.api.model.CreatedDTO;
@@ -35,6 +36,7 @@ public class UserControllerTest extends MockMvcSetup {
     private UserDTOMapper userDTOMapper;
 
     @Test
+    @WithMockUser("jack")
     public void addUser_whenInputOk_return201() throws Exception {
         final Integer ID = 123;
         var input = new UserDTO().email("vladcarcu@email.com");
@@ -42,7 +44,6 @@ public class UserControllerTest extends MockMvcSetup {
         when(userService.createNewUser(any())).thenReturn(ID);
 
         var result = mvc.perform(post("/user")
-                .with(MANAGER)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(input)))
                 .andExpect(status().isCreated())

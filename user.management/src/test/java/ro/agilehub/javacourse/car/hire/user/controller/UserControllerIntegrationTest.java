@@ -3,6 +3,7 @@ package ro.agilehub.javacourse.car.hire.user.controller;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.agilehub.javacourse.car.hire.api.model.CreatedDTO;
@@ -19,12 +20,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerIntegrationTest extends MockMvcSetup {
 
     @Test
+    @WithMockUser("jack")
     public void whenAddUserOk_thenFindById() throws Exception {
         final String email = "vladcarcu@email.com";
         var input = new UserDTO().email(email);
 
         var postResult = mvc.perform(post("/user")
-                .with(MANAGER)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(input)))
                 .andExpect(status().isCreated())
@@ -32,8 +33,7 @@ public class UserControllerIntegrationTest extends MockMvcSetup {
 
         var createdDTO = objectMapper.readValue(postResult.getResponse().getContentAsString(), CreatedDTO.class);
 
-        var getResult = mvc.perform(get("/user/" + createdDTO.getId())
-                .with(MANAGER))
+        var getResult = mvc.perform(get("/user/" + createdDTO.getId()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -43,6 +43,7 @@ public class UserControllerIntegrationTest extends MockMvcSetup {
     }
 
     @Test
+    @WithMockUser("jack")
     public void whenPatchUserOk_thenFindById() throws Exception {
         final String email = "vladcarcu+post@email.com";
         final String username = "vladcarcu+post";
@@ -52,15 +53,13 @@ public class UserControllerIntegrationTest extends MockMvcSetup {
 
         var postResult = mvc.perform(post("/user")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(input))
-                .with(MANAGER))
+                .content(objectMapper.writeValueAsString(input)))
                 .andExpect(status().isCreated())
                 .andReturn();
 
         var createdDTO = objectMapper.readValue(postResult.getResponse().getContentAsString(), CreatedDTO.class);
 
         mvc.perform(patch("/user/" + createdDTO.getId())
-                .with(MANAGER)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(input)))
                 .andExpect(status().isOk());
