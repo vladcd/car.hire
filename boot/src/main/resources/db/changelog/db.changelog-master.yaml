@@ -30,3 +30,15 @@ databaseChangeLog:
               - column:
                   name: last_modified_by
                   type: varchar
+  - changeSet:
+      id: '0003-remove-rental-table'
+      author: vladcarcu
+      comments: 'The rental table is moved to another schema, due to splitting the service into multiple microservices'
+      preConditions:
+        onFail: MARK_RAN
+        tableExists:
+          tableName: rental
+      changes:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: rental

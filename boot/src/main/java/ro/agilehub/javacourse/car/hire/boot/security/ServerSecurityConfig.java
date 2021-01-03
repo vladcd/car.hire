@@ -16,6 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Collection;
 
@@ -69,7 +72,11 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.cors(httpSecurityCorsConfigurer -> {
+            // this configures the default CORS policy
+            httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
+        })
+                .authorizeRequests()
                 // add here the resources which you need to make public, like static content or authorization links
                 .antMatchers("/swagger-ui.html", "/swagger-ui/*", "/v3/api-docs/*",
                         "/api.yaml", "/oauth/*", "/.well-known/*").permitAll()
@@ -106,4 +113,15 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(CorsConstants.ALLOWED_ORIGINS);
+        configuration.setAllowedMethods(CorsConstants.ALLOWED_METHODS);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 }

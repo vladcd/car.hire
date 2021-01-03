@@ -264,6 +264,58 @@ components:
       enum:
         - ACTIVE
         - DELETED
+
+    CarDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: car id
+        make:
+          type: string
+          example: VW
+          description: the make of the car
+        model:
+          type: string
+          example: Golf 7
+          description: the model of the car
+        year:
+          type: integer
+          format: int32
+          example: 2016
+          description: the year in which the car was built
+        mileage:
+          type: integer
+          format: int32
+          example: 12350
+          description: the approximate mileage when the car is being picked up
+        fuel:
+          $ref: '#/components/schemas/FuelType'
+        carClass:
+          $ref: '#/components/schemas/CarClass'
+        status:
+          $ref: '#/components/schemas/CarStatus'
+    FuelType:
+      type: string
+      enum:
+        - GAS
+        - DIESEL
+    CarClass:
+      type: string
+      enum:
+        - A-segment
+        - B-segment
+        - C-segment
+        - D-segment
+        - E-segment
+        - F-segment
+    CarStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - DELETED
+
     CreatedDTO:
       type: object
       properties:

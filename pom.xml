@@ -18,7 +18,6 @@
     <modules>
         <module>user.management</module>
         <module>fleet.management</module>
-        <module>rental</module>
         <module>api</module>
         <module>boot</module>
     </modules>
